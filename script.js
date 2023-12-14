@@ -13,42 +13,64 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 let map, mapEvent;
 
-// Getting coordinates using Geolocation API
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      const { latitude } = position.coords;
-      const { longitude } = position.coords;
-      console.log(
-        `https://www.google.com/maps/@${latitude},${longitude},15z?entry=ttu`
+class App {
+  #map;
+  #mapEvent;
+
+  constructor() {
+    this._getPosition();
+  }
+
+  _getPosition() {
+    // Getting coordinates using Geolocation API
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        this._loadMap.bind(this),
+        function () {
+          alert('Could not get your position');
+        }
       );
-
-      const coords = [latitude, longitude];
-
-      // display map from user location
-      map = L.map('map').setView(coords, 13);
-      // console.log(map);
-
-      // https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
-
-      // Handling map click events
-      map.on('click', function (mapE) {
-        mapEvent = mapE;
-
-        // render workout form
-        form.classList.remove('hidden');
-        inputDistance.focus();
-      });
-    },
-    function () {
-      alert('Could not get your position');
     }
-  );
+  }
+
+  _loadMap(position) {
+    const { latitude } = position.coords;
+    const { longitude } = position.coords;
+    console.log(
+      `https://www.google.com/maps/@${latitude},${longitude},15z?entry=ttu`
+    );
+
+    const coords = [latitude, longitude];
+
+    // display map from user location
+    this.#map = L.map('map').setView(coords, 13);
+    // console.log(map);
+
+    // https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(this.#map);
+
+    // Handling map click events
+    this.#map.on('click', function (mapE) {
+      this.#mapEvent = mapE;
+
+      // render workout form
+      form.classList.remove('hidden');
+      inputDistance.focus();
+    });
+  }
+
+  _showForm() {}
+
+  _toggleElevationField() {}
+
+  _newWorkout() {}
 }
+
+// creating object
+const app = new App();
 
 // Handling form submit event
 form.addEventListener('submit', function (e) {
