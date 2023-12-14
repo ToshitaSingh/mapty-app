@@ -23,6 +23,7 @@ if (navigator.geolocation) {
 
       const coords = [latitude, longitude];
 
+      // display map from user location
       const map = L.map('map').setView(coords, 13);
       // console.log(map);
 
@@ -32,10 +33,12 @@ if (navigator.geolocation) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
+      // Handling map click events
       map.on('click', function (mapEvent) {
         console.log(mapEvent);
         const { lat, lng } = mapEvent.latlng;
 
+        // add marker on map
         L.marker([lat, lng])
           .addTo(map)
           .bindPopup(
