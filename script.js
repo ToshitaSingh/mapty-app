@@ -11,6 +11,8 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+let map, mapEvent;
+
 // Getting coordinates using Geolocation API
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
@@ -34,24 +36,12 @@ if (navigator.geolocation) {
       }).addTo(map);
 
       // Handling map click events
-      map.on('click', function (mapEvent) {
-        console.log(mapEvent);
-        const { lat, lng } = mapEvent.latlng;
+      map.on('click', function (mapE) {
+        mapEvent = mapE;
 
-        // add marker on map
-        L.marker([lat, lng])
-          .addTo(map)
-          .bindPopup(
-            L.popup({
-              maxWidth: 250,
-              minWidth: 100,
-              autoClose: false,
-              closeOnClick: false,
-              className: 'running-popup',
-              content: '<p>Hello world!<br />This is a nice popup.</p>',
-            })
-          )
-          .openPopup();
+        // render workout form
+        form.classList.remove('hidden');
+        inputDistance.focus();
       });
     },
     function () {
@@ -59,3 +49,24 @@ if (navigator.geolocation) {
     }
   );
 }
+
+// Handling form submit event
+form.addEventListener('submit', function () {
+  // Display markup
+  console.log(mapEvent);
+  const { lat, lng } = mapEvent.latlng;
+
+  L.marker([lat, lng])
+    .addTo(map)
+    .bindPopup(
+      L.popup({
+        maxWidth: 250,
+        minWidth: 100,
+        autoClose: false,
+        closeOnClick: false,
+        className: 'running-popup',
+        content: '<p>Hello world!<br />This is a nice popup.</p>',
+      })
+    )
+    .openPopup();
+});
