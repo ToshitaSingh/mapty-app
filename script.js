@@ -26,7 +26,7 @@ if (navigator.geolocation) {
       const coords = [latitude, longitude];
 
       // display map from user location
-      const map = L.map('map').setView(coords, 13);
+      map = L.map('map').setView(coords, 13);
       // console.log(map);
 
       // https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
@@ -51,7 +51,16 @@ if (navigator.geolocation) {
 }
 
 // Handling form submit event
-form.addEventListener('submit', function () {
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  // Clear input fields
+  inputDistance.value =
+    inputDuration.value =
+    inputCadence.value =
+    inputElevation.value =
+      '';
+
   // Display markup
   console.log(mapEvent);
   const { lat, lng } = mapEvent.latlng;
@@ -69,4 +78,9 @@ form.addEventListener('submit', function () {
       })
     )
     .openPopup();
+});
+
+inputType.addEventListener('change', function () {
+  inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
