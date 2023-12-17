@@ -302,7 +302,7 @@ class App {
     });
 
     // interacting with objects using the public interface
-    workout.click();
+    // workout.click(); //ERROR:Lost prototype chain
   }
 
   _setLocalStorage() {
@@ -319,6 +319,13 @@ class App {
     this.#workouts.forEach(work => {
       this._renderWorkout(work);
     });
+  }
+
+  // deleting data from local storage || resetting application
+  // calling in browser console (app.reset())
+  reset() {
+    localStorage.removeItem('workouts');
+    location.reload();
   }
 }
 
